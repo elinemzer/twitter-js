@@ -17,4 +17,11 @@ router.get('/stylesheets/style.css', function (req, res) {
   res.sendFile('stylesheets/style.css');
 });
 
+router.get('/users/:name', function(req, res) {
+  var name = req.params.name;
+  var list = tweetBank.find( {name: name} );
+  res.render( 'index', { data: data } );
+});
+
+
 module.exports = router;
