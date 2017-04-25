@@ -17,11 +17,23 @@ router.get('/stylesheets/style.css', function (req, res) {
   res.sendFile('stylesheets/style.css');
 });
 
-router.get('/users/:name', function(req, res) {
+router.get('/users/:name', function(req, res, next) {
   var name = req.params.name;
-  var list = tweetBank.find( {name: name} );
-  res.render( 'index', { data: data } );
+  var list = tweetBank.find({name: name});
+  //console.log( list );
+  // var tweets = {};
+  // for (var i = 0; i < list.length; i++){
+  //   tweets[i] = list[i];
+  // }
+  // console.log(tweets);
+  res.render( 'index', {tweets: list});
 });
+
+router.get('/tweets/:id', function(req, res, next){
+  var id = Number(req.params.id);
+  var tweetID = tweetBank.find({id: id});
+  res.render('index', {tweets: tweetID})
+})
 
 
 module.exports = router;
