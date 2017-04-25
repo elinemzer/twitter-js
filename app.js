@@ -6,11 +6,38 @@ const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 const volleyball = require('volleyball');
 const routes = require('./routes');
+const fs = require('fs');
+const path = require('path')
+const mime = require('mime');
 
-//NUNJACK CONFIGURATION WITH HTML
+//NUNJACK CONFIGURATION WITH HTML -- BOILERPLATE, JUST COPY AND PASTE IN
 app.set('view engine', 'html'); // have res.render work with html files
 app.engine('html', nunjucks.render); // when giving html files to res.render, tell it to use nunjucks
 nunjucks.configure('views', {noCache: true}); // point nunjucks to the proper directory for templates
+
+// manually writter static file middleware
+// app.use(function(req, res, next){
+//   var mimeType = mime.lookup(req.path); //mime has a lookup that checks the file extension and figures out the corresponding header content type
+//   fs.readFile('./public' = req.path, function(err, fileBuffer){
+//     if(err) return next() // 'there was no file at that path'
+//     res.header('Content-Type', mimeType);
+//     res.send(fileBuffer)
+//   })
+// })
+
+//TYPICAL WAY TO USE STATIC MIDDLEWARE
+app.use(express.static(__dirname + '/public'));
+
+//HOW TO USE bodyParser
+app.use(bodyParser.urlencoded({ extended: true }))
+
+//ANOTHER COMMON THING TO DO (FOR AJAX REQUESTS) DOESNT ACTUALLY DO ANYTHING HERE
+app.use(bodyParser.json());
+
+//WHAT DOES EXPRESS STATIC ACTUALLY DO?
+//it looks in the folder you pass in (public) and will try to convert that uri into a relative
+// file path. If it finds a resource that matches that, it will grab that and send back to the
+// client.
 
 //HTML ROUTING THROUGH ROUTES FOLDER
 var PORT = 3000;

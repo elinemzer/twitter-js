@@ -6,33 +6,29 @@ const tweetBank = require('../tweetBank');
 //ROUTING LOGIC
 
 router.use(express.static('public'));
-router.get('/', function (req, res) {
-//  console.log('hi?')
-  let tweets = tweetBank.list();
-  res.render( 'index', { tweets: tweets } );
-});
 
 router.get('/stylesheets/style.css', function (req, res) {
-//  console.log('hello?');
   res.sendFile('stylesheets/style.css');
 });
 
+router.get('/', function (req, res) {
+  var allTheTweets = tweetBank.list();
+  res.render( 'index', { title: 'Twitter.js', tweets: allTheTweets, showForm: true } );
+});
+
 router.get('/users/:name', function(req, res, next) {
-  var name = req.params.name;
-  var list = tweetBank.find({name: name});
-  //console.log( list );
-  // var tweets = {};
-  // for (var i = 0; i < list.length; i++){
-  //   tweets[i] = list[i];
-  // }
-  // console.log(tweets);
-  res.render( 'index', {tweets: list});
+  var tweetsForName = tweetBank.find({name: req.params.name});
+  res.render( 'index', {title: 'Twitter.js', tweets: tweetsForName, showForm: true, username: req.params.name});
 });
 
 router.get('/tweets/:id', function(req, res, next){
-  var id = Number(req.params.id);
-  var tweetID = tweetBank.find({id: id});
-  res.render('index', {tweets: tweetID})
+  var tweetID = tweetBank.find({id: Number(req.params.id)});
+  res.render('index', {title: 'Twitter.js', tweets: tweetID})
+});
+
+router.post('/tweets', function(req, res, next){
+  tweetBank.add(req.body.name, req.body.text); //this adds to tweetBank, but doesnt respond to client
+  res.redirect('/'); //whenever a browser responds, it completely reloads the form. Então, need to redirect to a different location, the root.
 })
 
 
